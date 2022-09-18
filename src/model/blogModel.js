@@ -17,12 +17,12 @@ const blogSchema = new mongoose.Schema(
         },
         tags: {
             type: [String],
-            enum: ["Book", "Friends", "Self help","Communication"]
+    
         },
         category: {
             type: String,
             required: true,
-            enum: ["technology", "entertainment", "lifeStyle", "food", "fashion"]
+   
         },
         subcategory: {
             type: [ String]

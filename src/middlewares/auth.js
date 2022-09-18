@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken')
 const blogModel = require('../model/blogModel')
 const mongoose = require('mongoose')
+const { response } = require('express')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 
@@ -11,7 +12,7 @@ const authenticate = function (req, res, next) {
 
         if (!token) return res.status(401).send({ status: false, msg: "Token must be present" })
 
-        decodedtoken = jwt.verify(token, "Project -1 Blogging Project",
+       jwt.verify(token, "Project -1 Blogging Project",
             (error, response) => {
                 if (error) {
                     return res.status(400).send({ status: false, msg: "Invalid token " });
@@ -34,8 +35,9 @@ const authorise = async function (req, res, next) {
             let data = await blogModel.findById(blogId)    //search doc with that given blogId
             if (data == null) return res.status(403).send({  status: false,msg: "No blog available with this BlogId" })
             let loggedInAuthor = data.authorId.toString()  //person who want to access to resource
-            let priviledgedAuthor = decodetoken.authorId   //person who is loggedIn (has token)
-
+            let priviledgedAuthor = req.headers.authorId   //person who is loggedIn (has token)
+            // console.log(priviledgedAuthor)
+            // console.log(loggedInAuthor)
             if (loggedInAuthor != priviledgedAuthor) return res.status(403).send({ status: false, msg: "You are not authorised for this operation" })
             next()
         }
